@@ -580,3 +580,4 @@ Imaš **kompletan, profesionalan AI SaaS backend** spreman za produkciju!
 ---
 
 *Made with ❤️ for Martina*
+# BLACK-Entity-PRO-STUDIO-No.1
