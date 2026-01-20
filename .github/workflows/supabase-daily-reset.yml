@@ -1,0 +1,18 @@
+name: Supabase Daily Reset
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # svaki dan u 2:00 UTC
+  workflow_dispatch:
+
+jobs:
+  reset-tokens:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Supabase reset_tokens_used_24h
+        run: |
+          curl -X POST \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/rpc/reset_tokens_used_24h" \
+            -H "apikey: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Content-Type: application/json"
