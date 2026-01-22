@@ -5,11 +5,11 @@ import { incrementTokens } from '../supabase.js';
 
 const router = express.Router();
 
-const openai = new OpenAI({ 
-  apiKey: process.env.OPENAI_API_KEY 
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
 });
 
-// POST /api/image - Generiranje slika s DALL·E
+// POST /api/image – Image generation (DALL·E)
 router.post('/', requireAuth, async (req: AuthRequest, res) => {
   const { prompt, model, size } = req.body;
 
@@ -18,7 +18,7 @@ router.post('/', requireAuth, async (req: AuthRequest, res) => {
   }
 
   try {
-    // Povećaj tokens_used (preskoči za admina)
+    // Increment usage (skip admin)
     if (!req.isAdmin && req.user) {
       await incrementTokens(req.user.id, 1);
     }
@@ -27,21 +27,30 @@ router.post('/', requireAuth, async (req: AuthRequest, res) => {
       model: model || 'dall-e-3',
       prompt,
       n: 1,
-      size: size || '1024x1024',
+      size: size || '1024x1024'
     });
 
-    res.json({ 
-      imageUrl: image.data[0].url,
+    const imageUrl = image.data?.[0]?.url;
+
+    if (!imageUrl) {
+      return res.status(502).json({
+        error: 'Image generation failed (no image URL returned)'
+      });
+    }
+
+    return res.json({
+      imageUrl,
       prompt,
       model: model || 'dall-e-3'
     });
   } catch (error: any) {
     console.error('Image generation error:', error);
-    res.status(500).json({ 
-      error: 'Image generation failed', 
-      message: error.message 
+    return res.status(500).json({
+      error: 'Image generation failed',
+      message: error.message
     });
   }
 });
 
 export default router;
+

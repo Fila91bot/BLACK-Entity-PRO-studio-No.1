@@ -3,6 +3,8 @@ dotenv.config();
 
 import express from 'express';
 import cors from 'cors';
+import type { Request, Response, NextFunction } from 'express';
+
 import chatRouter from './routes/chat.js';
 import imageRouter from './routes/image.js';
 import videoRouter from './routes/video.js';
@@ -12,20 +14,8 @@ import adminRouter from './routes/admin.js';
 const app = express();
 
 // Middleware
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-  credentials: true
-}));
+app.use(cors());
 app.use(express.json());
-
-// Health check
-app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
-    timestamp: new Date().toISOString(),
-    service: 'BLACK Entity Studio Backend'
-  });
-});
 
 // Routes
 app.use('/api/chat', chatRouter);
@@ -34,16 +24,18 @@ app.use('/api/video', videoRouter);
 app.use('/api/subscription', subscriptionRouter);
 app.use('/api/admin', adminRouter);
 
-// Error handling
-app.use((err, req, res, next) => {
+// Global error handler (MORA biti zadnji)
+app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   console.error('Server error:', err);
-  res.status(500).json({ 
+  const message = err instanceof Error ? err.message : 'Unknown error';
+  res.status(500).json({
     error: 'Internal server error',
-    message: err.message 
+    message
   });
 });
 
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
   console.log(`🚀 BLACK Entity Studio Backend running on http://localhost:${PORT}`);
   console.log(`📊 Admin dashboard: http://localhost:${PORT}/api/admin/stats`);
@@ -53,3 +45,4 @@ app.listen(PORT, () => {
 });
 
 export default app;
+
