@@ -1,10 +1,8 @@
 import dotenv from 'dotenv';
 dotenv.config();
-
 import express from 'express';
 import cors from 'cors';
 import type { Request, Response, NextFunction } from 'express';
-
 import chatRouter from './routes/chat.js';
 import imageRouter from './routes/image.js';
 import videoRouter from './routes/video.js';
@@ -15,6 +13,11 @@ const app = express();
 
 // Middleware
 app.use(cors());
+
+// ✅ SAMO ZA WEBHOOK - Express.raw za /api/subscription/webhook
+app.use('/api/subscription/webhook', express.raw({ type: 'application/json' }));
+
+// Za sve ostalo - JSON parser
 app.use(express.json());
 
 // Routes
@@ -24,7 +27,7 @@ app.use('/api/video', videoRouter);
 app.use('/api/subscription', subscriptionRouter);
 app.use('/api/admin', adminRouter);
 
-// Global error handler (MORA biti zadnji)
+// Global error handler
 app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   console.error('Server error:', err);
   const message = err instanceof Error ? err.message : 'Unknown error';
@@ -35,7 +38,6 @@ app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
 });
 
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => {
   console.log(`🚀 BLACK Entity Studio Backend running on http://localhost:${PORT}`);
   console.log(`📊 Admin dashboard: http://localhost:${PORT}/api/admin/stats`);
@@ -45,4 +47,3 @@ app.listen(PORT, () => {
 });
 
 export default app;
-

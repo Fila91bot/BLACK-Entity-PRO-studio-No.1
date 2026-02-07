@@ -33,7 +33,8 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
     const secret = process.env.LEMONSQUEEZY_WEBHOOK_SECRET;
     if (secret) {
       const hmac = crypto.createHmac('sha256', secret);
-      const digest = hmac.update(JSON.stringify(body)).digest('hex');
+      const rawBodyString = (req as any).rawBody || JSON.stringify(body);
+      const digest = hmac.update(body as Buffer).digest('hex');
       
       if (signature !== digest) {
         console.error('Invalid webhook signature');
@@ -41,7 +42,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
       }
     }
 
-    const event = typeof body === 'string' ? JSON.parse(body) : body;
+    const event = JSON.parse((body as Buffer).toString('utf-8'));
     const eventName = event.meta?.event_name;
 
     console.log('Webhook event:', eventName);
