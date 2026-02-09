@@ -8,6 +8,7 @@ on:
 jobs:
   reset-tokens:
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - name: Call Supabase reset_tokens_used_24h
         run: |
