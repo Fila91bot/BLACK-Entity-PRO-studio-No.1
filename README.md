@@ -9,7 +9,7 @@
 ### 🤖 AI Chat
 - **OpenAI GPT-4o Mini** - Brz i pametan chat
 - **Groq Llama 3.3 70B** - Ultra-brz open-source model
-- **Groq Mixtral 8x7B** - Moćan mixture-of-experts model
+- **Mistral-Large/small** - Moćan mixture-of-experts model
 - Streaming responses (real-time)
 - Multi-model support
 
@@ -24,8 +24,6 @@
 
 ### 💳 Subscription System
 - **Lemon Squeezy** integracija
-- €49/mjesec subscription
-- 20 besplatnih poruka za nove korisnike
 - Webhook automation
 
 ### 📊 Admin Dashboard
@@ -53,7 +51,7 @@ black-entity-studio/
 │   │   │   └── auth.ts          # Auth + rate limiting
 │   │   ├── supabase.ts          # Database client
 │   │   └── server.ts            # Express server
-│   ├── .env                     # API keys (VEĆ ISPUNJEN!)
+│   ├── .env                     # API keys
 │   ├── package.json
 │   ├── tsconfig.json
 │   └── supabase-schema.sql      # Database schema
@@ -84,25 +82,25 @@ cd backend
 npm install
 ```
 
-**✅ `.env` JE VEĆ ISPUNJEN!** Sve tvoje API ključeve sam dodao:
+**✅ `.env`
 
 ```env
 # OpenAI (GPT chat + DALL·E slike)
-OPENAI_API_KEY=sk-proj-8To8o0... ✅
+OPENAI_API_KEY= ✅
 
 # Groq (Besplatni, brzi LLM modeli)
-GROQ_API_KEY=gsk_OF8JmgfHpB... ✅
+GROQ_API_KEY= ✅
 
 # Supabase (Baza podataka)
-SUPABASE_URL=https://rbjctlpfzmchmcxtvbud.supabase.co ✅
-SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1Ni... ✅
+SUPABASE_URL=https://... ✅
+SUPABASE_ANON_KEY= ✅
 
 # Lemon Squeezy (Plaćanja)
-LEMONSQUEEZY_API_KEY=eyJ0eXAiOiJKV1Qi... ✅
-LEMONSQUEEZY_WEBHOOK_SECRET=whsec_4f8a2c9b1e7d ✅
+LEMONSQUEEZY_API_KEY= ✅
+LEMONSQUEEZY_WEBHOOK_SECRET=✅
 
 # Admin
-ADMIN_PASSWORD=Martina91 ✅
+ADMIN_PASSWORD=✅
 
 # Port
 PORT=3000 ✅
@@ -113,7 +111,7 @@ PORT=3000 ✅
 ### 2️⃣ POSTAVI SUPABASE BAZU
 
 1. Otvori https://supabase.com/dashboard
-2. Odaberi svoj projekt (rbjctlpfzmchmcxtvbud)
+2. Odaberi svoj projekt
 3. Idi na **SQL Editor**
 4. Kopiraj cijeli sadržaj iz `backend/supabase-schema.sql`
 5. Zalijepi u editor
@@ -153,14 +151,14 @@ curl http://localhost:3000/api/health
 **Test admin stats (koristi admin password):**
 ```bash
 curl http://localhost:3000/api/admin/stats \
-  -H "x-admin-password: Martina91"
+  -H "x-admin-password: ..."
 ```
 
 **Test chat (s admin passwordom):**
 ```bash
 curl -X POST http://localhost:3000/api/chat \
   -H "Content-Type: application/json" \
-  -H "x-admin-password: Martina91" \
+  -H "x-admin-password: ..." \
   -d '{"messages": [{"role": "user", "content": "Pozdrav!"}], "model": "gpt-4o-mini"}'
 ```
 
@@ -168,7 +166,7 @@ curl -X POST http://localhost:3000/api/chat \
 ```bash
 curl -X POST http://localhost:3000/api/image \
   -H "Content-Type: application/json" \
-  -H "x-admin-password: Martina91" \
+  -H "x-admin-password: ...." \
   -d '{"prompt": "cyberpunk city at night, neon lights"}'
 ```
 
@@ -180,11 +178,11 @@ curl -X POST http://localhost:3000/api/image \
 ```http
 POST /api/chat
 Headers: 
-  - x-admin-password: Martina91 (za admin)
+  - x-admin-password: ... (za admin)
   - Authorization: Bearer <token> (za korisnike)
 Body: {
   "messages": [{"role": "user", "content": "..."}],
-  "model": "gpt-4o-mini" | "llama-3.3-70b-versatile" | "mixtral-8x7b-32768"
+  "model": "gpt-4o-mini" | "llama-3.3-70b-versatile" | "mistral-large(small)"
 }
 ```
 
@@ -202,7 +200,7 @@ Body: {
 ### Admin Stats
 ```http
 GET /api/admin/stats
-Headers: x-admin-password: Martina91
+Headers: x-admin-password: ....
 Response: {
   "overview": {...},
   "flagged_users": [...],
@@ -276,18 +274,11 @@ GET /api/subscription/status/:userId
 
 **OpenAI:**
 - `gpt-4o-mini` - Brz, pametan, najbolji omjer cijene/kvalitete
-- `gpt-4o` - Najmoćniji (skuplje)
-- `gpt-3.5-turbo` - Stariji, jeftiniji
 
 **Groq (BESPLATNO, ultra brzo!):**
-- `llama-3.3-70b-versatile` - Meta Llama 3.3 70B (preporučam!)
-- `llama-3.1-70b-versatile` - Meta Llama 3.1 70B
-- `mixtral-8x7b-32768` - Mixtral 8x7B MoE
-- `gemma2-9b-it` - Google Gemma 2 9B
-
+- `llama-3.3-70b-versatile` - Meta Llama 3.3 70B
 ### Image modeli:
 - `dall-e-3` - OpenAI DALL·E 3 (najbolja kvaliteta)
-- `dall-e-2` - Stariji, jeftiniji
 
 ---
 
@@ -302,7 +293,7 @@ GET /api/subscription/status/:userId
 
 **Admin:**
 - Neograničeno
-- Password: `Martina91`
+- Password: `...`
 
 **Dnevni reset:**
 - GitHub Action automatski resetira `tokens_used_24h` svaki dan u 02:00 UTC
@@ -314,7 +305,7 @@ GET /api/subscription/status/:userId
 ### Admin
 ```javascript
 Headers: {
-  'x-admin-password': 'Martina91'
+  'x-admin-password': '...'
 }
 ```
 
@@ -345,7 +336,7 @@ GROQ_API_KEY=gsk_...
 SUPABASE_URL=https://...
 SUPABASE_ANON_KEY=eyJ...
 LEMONSQUEEZY_API_KEY=eyJ...
-ADMIN_PASSWORD=Martina91
+ADMIN_PASSWORD=...
 PORT=3000
 FRONTEND_URL=https://your-frontend.vercel.app
 ```
@@ -378,7 +369,7 @@ const response = await fetch('http://localhost:3000/api/chat', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    'x-admin-password': 'Martina91' // ili Authorization: Bearer <token>
+    'x-admin-password': '....' // ili Authorization: Bearer <token>
   },
   body: JSON.stringify({
     messages: [{ role: 'user', content: 'Hello!' }],
@@ -487,7 +478,7 @@ function ChatBox() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-admin-password': 'Martina91'
+        'x-admin-password': '....'
       },
       body: JSON.stringify({
         messages: [...messages, { role: 'user', content: input }],
@@ -579,5 +570,5 @@ Imaš **kompletan, profesionalan AI SaaS backend** spreman za produkciju!
 
 ---
 
-*Made with ❤️ for Martina*
+*Made:
 # BLACK-Entity-PRO-STUDIO-No.1
