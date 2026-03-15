@@ -238,7 +238,7 @@ router.get("/result", requireAuth, async (req: AuthRequest, res) => {
     }
 
    res.setHeader("Content-Type", "video/mp4");
-   res.setHeader("Content-Disposition", `inline; filename="black-entity-video.mp4"`);
+   res.setHeader("Content-Disposition", `inline; filename="generated-video.mp4"`);
 
     const reader = videoResp.body.getReader();
     while (true) {

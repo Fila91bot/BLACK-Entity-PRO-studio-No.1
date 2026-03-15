@@ -10,8 +10,8 @@ router.post('/create', async (req, res) => {
     const { userId, email } = req.body;
 
     // Lemon Squeezy checkout URL
-    const productId = process.env.VITE_LEMONSQUEEZY_PRODUCT_ID || '770613';
-    const checkoutUrl = `https://black-entity.lemonsqueezy.com/checkout/buy/${productId}`;
+    const productId = process.env.VITE_LEMONSQUEEZY_PRODUCT_ID || 'YOUR_PRODUCT_ID';
+    const checkoutUrl = `https://YOUR-URL.com/checkout/buy/${productId}`;
 
     res.json({ 
       checkoutUrl,

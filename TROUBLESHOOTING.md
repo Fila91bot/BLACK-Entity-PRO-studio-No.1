@@ -1,120 +1,81 @@
-# 🔧 TROUBLESHOOTING - Rješavanje Problema
+# 🔧 TROUBLESHOOTING GUIDE
 
-## ❌ Problem: "Missing Supabase environment variables"
+## ❌ Error: "Missing Supabase environment variables"
 
-### Rješenje 1: Provjeri .env datoteku
+Solution 1: Check your .env file
 
-```bash
-# Provjeri postoji li .env
 ls -la | grep .env
-
-# Provjeri sadržaj
 cat .env
-```
 
-**Ako ne postoji `.env`:**
-```bash
+If .env does not exist:
+
 cp .env.example .env
-```
 
----
+Make sure the following variables are set:
+SUPABASE_URL=
+SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
 
-### Rješenje 2: Provjeri da dotenv radi
+✅Solution 2: Ensure dotenv is loading correctly
 
-Otvori `src/server.ts` i dodaj na vrh (prije svega):
+At the top of src/server.ts, make sure you have:
 
-```typescript
 import dotenv from 'dotenv';
 dotenv.config();
 
-// Debug - provjeri učitane varijable
-console.log('SUPABASE_URL:', process.env.SUPABASE_URL ? '✅' : '❌');
-console.log('OPENAI_API_KEY:', process.env.OPENAI_API_KEY ? '✅' : '❌');
-console.log('GROQ_API_KEY:', process.env.GROQ_API_KEY ? '✅' : '❌');
-```
+You can temporarily debug:
 
----
+console.log('SUPABASE_URL:', !!process.env.SUPABASE_URL);
+console.log('OPENAI_API_KEY:', !!process.env.OPENAI_API_KEY);
+console.log('GROQ_API_KEY:', !!process.env.GROQ_API_KEY);
 
-### Rješenje 3: Pokreni s explicit dotenv
+✅ Solution 3: Run with explicit dotenv loading
 
-```bash
-# Umjesto npm run dev:
 node --require dotenv/config --loader tsx src/server.ts
-```
 
----
+✅ Solution 4: Set environment variables manually
 
-### Rješenje 4: Ručno postavi env varijable
-
-```bash
-# Linux/Mac:
-export SUPABASE_URL="https://rbjctlpfzmchmcxtvbud.supabase.co"
-export SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+Linux / macOS:
+export SUPABASE_URL="https://PROJECT.supabase.co"
+export SUPABASE_ANON_KEY="..."
 npm run dev
 
-# Windows (PowerShell):
-$env:SUPABASE_URL="https://rbjctlpfzmchmcxtvbud.supabase.co"
-$env:SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+Windows PowerShell:
+$env:SUPABASE_URL="https://PROJECT.supabase.co"
+$env:SUPABASE_ANON_KEY="..."
 npm run dev
-```
 
----
+❌ Problem: nodemon crashes
+✅ Solution: Use tsx instead of nodemon
+Update package.json:
 
-## ❌ Problem: nodemon crash
-
-### Rješenje: Koristi tsx direktno
-
-Promijeni `package.json`:
-
-```json
 "scripts": {
   "dev": "tsx watch src/server.ts",
   "start": "node dist/server.js"
 }
-```
-
-Zatim:
-```bash
+Then run:
 npm run dev
-```
 
----
+❌ Error: “Cannot find module 'groq-sdk'”
+✅ Solution:
 
-## ❌ Problem: "Cannot find module 'groq-sdk'"
-
-### Rješenje:
-
-```bash
 npm install
-# ili
+# or
 npm install groq-sdk
-```
 
----
+❌ TypeScript errors during development
+✅ Solution:
+Ignore TypeScript errors while running dev mode:
 
-## ❌ Problem: TypeScript greške
-
-### Rješenje:
-
-```bash
-# Ignoriraj TypeScript greške prilikom pokretanja
 npm run dev -- --transpile-only
-```
 
----
+⚡ QUICK FIX (recommended)
+If something still doesn’t work, run:
 
-## ✅ QUICK FIX (brzo rješenje)
-
-Pokreni ovaj setup script:
-
-```bash
+bash
 chmod +x setup.sh
 ./setup.sh
 npm run dev
-```
 
----
 
-## 📧 Ako ništa ne radi:
 
-Javi mi točan error message i ja ću ti pomoći! 😊
